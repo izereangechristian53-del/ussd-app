@@ -1,0 +1,31 @@
+from flask import Flask, request
+import africastalking
+
+app = Flask(__name__)
+
+@app.route("/", methods=['POST', 'GET'])
+def ussd_callback():
+    session_id   = request.values.get("sessionId", None)
+    service_code = request.values.get("serviceCode", None)
+    phone_number = request.values.get("phoneNumber", None)
+    text         = request.values.get("text", "")
+
+    response  = ""
+
+    if text == "":
+        response = "CON Welcome to My USSD App\n"
+        response += "1. Check info\n"
+        response += "2. About"
+    elif text == "1":
+        response = "CON Here is your information...\n"
+        response += "0. Back"
+    elif text == "2":
+        response = "END This USSD app is created for my project."
+    else:
+        response = "END Thank you!"
+
+    return response
+
+
+if __name__ == "__main__":
+    app.run(port=5000)
